@@ -2,9 +2,9 @@ package br.com.fiap.bug_milenium;
 
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
-import jdk.jfr.Name;
+import jakarta.inject.Named;
 
-@Name(value = "controleDataHora")
+@Named(value = "controleDataHora")
 @RequestScoped
 public class ControleDataHora {
 
