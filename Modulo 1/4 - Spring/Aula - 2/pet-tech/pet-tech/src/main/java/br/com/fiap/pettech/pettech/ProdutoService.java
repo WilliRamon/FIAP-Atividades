@@ -1,5 +1,6 @@
 package br.com.fiap.pettech.pettech;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,9 @@ public class ProdutoService {
         return produtos;
     }
 
-    public Optional<Produto> findById(UUID id){
+    public Produto findById(UUID id){
         //Optional<Produto> produto = repo.findById(id);
-        var produto = repo.findById(id);
+        var produto = repo.findById(id).orElseThrow(() -> new ControllerNotFoundException("Produto não encontrado"));
         return produto;
     }
 
@@ -32,14 +33,18 @@ public class ProdutoService {
     }
 
     public Produto update(UUID id, Produto produto){
-        Produto buscaProduto = repo.getOne(id);
-        buscaProduto.setNome(produto.getNome());
-        buscaProduto.setDescricao(produto.getDescricao());
-        buscaProduto.setUrlDaImagem(produto.getUrlDaImagem());
-        buscaProduto.setPreco(produto.getPreco());
-        buscaProduto = repo.save(buscaProduto);
+        try{
+            Produto buscaProduto = repo.getOne(id);
+            buscaProduto.setNome(produto.getNome());
+            buscaProduto.setDescricao(produto.getDescricao());
+            buscaProduto.setUrlDaImagem(produto.getUrlDaImagem());
+            buscaProduto.setPreco(produto.getPreco());
+            buscaProduto = repo.save(buscaProduto);
 
-        return buscaProduto;
+            return buscaProduto;
+        } catch (EntityNotFoundException e){
+            throw new ControllerNotFoundException("Produto não encontrador");
+        }
     }
 
     public void delete(UUID id){
