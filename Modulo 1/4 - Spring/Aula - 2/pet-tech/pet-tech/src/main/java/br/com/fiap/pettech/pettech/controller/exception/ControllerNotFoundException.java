@@ -1,4 +1,4 @@
-package br.com.fiap.pettech.pettech;
+package br.com.fiap.pettech.pettech.controller.exception;
 
 public class ControllerNotFoundException extends RuntimeException{
 
