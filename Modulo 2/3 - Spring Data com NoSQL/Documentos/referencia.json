@@ -1,0 +1,9 @@
+{
+    "_id": Object("user1"),
+    "nome": "João",
+    "idade": 25,
+    "postagem": [
+        ObjectId("post1"),
+        ObjectId("post2")
+    ]
+}

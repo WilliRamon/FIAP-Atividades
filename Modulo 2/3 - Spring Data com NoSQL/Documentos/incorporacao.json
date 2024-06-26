@@ -1,0 +1,17 @@
+{
+    "_id": ObjectId("user1"),
+    "nome": "João",
+    "idade": 25,
+    "postagem": [
+        {
+            "_id": ObjectId("post1"),
+            "titulo": "Primeira Postagem",
+            "conteudo": "Conteúdo da primeira postagem"
+        },
+        {
+            "_id": ObjectId("post2"),
+            "titulo": "Segunda Postagem",
+            "conteudo": "Conteúdo da segunda postagem"
+        }
+    ]
+}
