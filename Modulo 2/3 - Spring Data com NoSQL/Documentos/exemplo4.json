@@ -1,0 +1,11 @@
+{
+    "_id": ObjectId("32324235346"),
+    "nome": "Ana",
+    "hobbies": ["leitura", "corrida", "cozinhar"]
+}
+
+{
+    "_id": ObjectId("32324235346"),
+    "nome": "Ana",
+    "valores": [1, 2, 3, 4]
+}

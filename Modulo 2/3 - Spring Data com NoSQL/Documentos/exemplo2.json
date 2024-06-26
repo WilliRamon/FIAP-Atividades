@@ -1,0 +1,19 @@
+{
+    "_id": ObjectId("32324235346"),
+    "titulo": "Livro",
+    "autor": "John Doerr",
+    "ano": 2021,
+    "preco": 29.99,
+    "disponivel": true
+}
+
+{
+    "_id": ObjectId("32324235346"),
+    "titulo": "Livro",
+    "autor": "John Doerr",
+    "ano": 2021,
+    "disponivel": true
+}
+
+--No MongoDB não existe a obrigatoriedade de ter documentos com mesmos campos dentro de um arquivo.
+--No exemplo acima, o campo 'preço'está presente no primeiro documento mas não está no segundo.
