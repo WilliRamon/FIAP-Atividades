@@ -15,16 +15,17 @@ public class ArtigoServiceImpl implements ArtigoService {
     private ArtigoRepository artigoRepository;
     @Override
     public List<Artigo> obterTodos() {
-        return null;
+        return this.artigoRepository.findAll();
     }
 
     @Override
     public Artigo obterPorCodigo(String codigo) {
-        return null;
+        return this.artigoRepository
+                .findById(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("Artigo não existe"));
     }
-
     @Override
     public Artigo criar(Artigo artigo) {
-        return null;
+        return this.artigoRepository.save(artigo);
     }
 }
