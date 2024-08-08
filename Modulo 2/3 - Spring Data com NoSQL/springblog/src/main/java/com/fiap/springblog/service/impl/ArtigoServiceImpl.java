@@ -63,4 +63,15 @@ public class ArtigoServiceImpl implements ArtigoService {
         Query query = new Query(Criteria.where("data").gt(data)); // buscar uma data onde seja maior que o parãmetro informado.
         return mongoTemplate.find(query, Artigo.class);
     }
+
+    @Override
+    public List<Artigo> findByDataAndStatus(LocalDateTime data, Integer status) {
+        Query query = new Query(Criteria.where("data").is(data).and("status").is(status)); // buscar dois parâmentros iguais
+        return mongoTemplate.find(query, Artigo.class);
+    }
+
+    @Override
+    public void atualizar(Artigo updateArtigo) {
+        this.artigoRepository.save(updateArtigo);
+    }
 }
