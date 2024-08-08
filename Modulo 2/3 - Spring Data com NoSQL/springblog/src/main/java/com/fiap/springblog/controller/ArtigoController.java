@@ -37,6 +37,10 @@ public class ArtigoController {
     }
     @PutMapping
     public void atualizar(@RequestBody Artigo artigo){
-        this.artigoService.atualizar(atualizar(););
+        this.artigoService.atualizar(artigo);
+    }
+    @PutMapping
+    public void atualizarArtigo(@PathVariable String id, @RequestBody String novaURL){
+        
     }
 }
