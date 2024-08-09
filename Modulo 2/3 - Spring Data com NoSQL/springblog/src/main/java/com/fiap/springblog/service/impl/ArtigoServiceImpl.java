@@ -70,6 +70,10 @@ public class ArtigoServiceImpl implements ArtigoService {
         Query query = new Query(Criteria.where("data").is(data).and("status").is(status)); // buscar dois parâmentros iguais
         return mongoTemplate.find(query, Artigo.class);
     }
+    @Override
+    public List<Artigo> findByStatusAndDataGreaterThan(Integer status, LocalDateTime data) {
+        return this.artigoRepository.findByStatusAndDataGreaterThan(status, data);
+    }
 
     @Override
     public void atualizar(Artigo updateArtigo) {
