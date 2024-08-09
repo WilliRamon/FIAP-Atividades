@@ -39,8 +39,16 @@ public class ArtigoController {
     public void atualizar(@RequestBody Artigo artigo){
         this.artigoService.atualizar(artigo);
     }
-    @PutMapping
+    @PutMapping("/{id}")
     public void atualizarArtigo(@PathVariable String id, @RequestBody String novaURL){
-        
+        this.artigoService.atualizarArtigo(id, novaURL);
+    }
+    @DeleteMapping("/{id}")
+    public void deleteArtigo(@PathVariable String id){
+        this.artigoService.deleteById(id);
+    }
+    @DeleteMapping("/delete")
+    public void deleteArtigoById(@RequestParam("Id") String id){
+        this.artigoService.deleteArtigobyId(id);
     }
 }

@@ -82,4 +82,15 @@ public class ArtigoServiceImpl implements ArtigoService {
         Update update = new Update().set("url", novaURL);          //Os campos que serão atualizados
         this.mongoTemplate.updateFirst(query,update, Artigo.class);//Executo o comando
     }
+
+    @Override
+    public void deleteById(String id){
+        this.artigoRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteArtigobyId(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        mongoTemplate.remove(query, Artigo.class);
+    }
 }
