@@ -76,6 +76,11 @@ public class ArtigoServiceImpl implements ArtigoService {
     }
 
     @Override
+    public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate) {
+        return this.artigoRepository.obterArtigoPorDataHora(de,ate);
+    }
+
+    @Override
     public void atualizar(Artigo updateArtigo) {
         this.artigoRepository.save(updateArtigo);
     }

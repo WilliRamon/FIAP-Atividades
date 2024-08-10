@@ -35,6 +35,10 @@ public class ArtigoController {
     public List<Artigo> findByStatusAndDataGreaterThan(@RequestParam("status") Integer status, @RequestParam("data") LocalDateTime data){
         return this.artigoService.findByStatusAndDataGreaterThan(status, data);
     }
+    @GetMapping("/periodo")
+    public List<Artigo> obterArtigoPorDataHora(@RequestParam("de") LocalDateTime de, @RequestParam("ate") LocalDateTime ate){
+        return this.artigoService.obterArtigoPorDataHora(de, ate);
+    }
     @PostMapping
     public Artigo criar(@RequestBody Artigo artigo){
         return this.artigoService.criar(artigo);
