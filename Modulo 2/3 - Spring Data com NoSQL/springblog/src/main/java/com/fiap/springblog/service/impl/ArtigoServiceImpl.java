@@ -81,6 +81,20 @@ public class ArtigoServiceImpl implements ArtigoService {
     }
 
     @Override
+    public List<Artigo> encontrarArtigosComplexos(Integer status, LocalDateTime data, String titulo) {
+        Criteria criteria = new Criteria();
+        criteria.and("data").lte(data);
+        if(status != null){
+            criteria.and("status").is(status);
+        }
+        if(titulo != null && !titulo.isEmpty()){
+            criteria.and("titulo").regex(titulo, "i");
+        }
+        Query query = new Query(criteria);
+        return mongoTemplate.find(query, Artigo.class);
+    }
+
+    @Override
     public void atualizar(Artigo updateArtigo) {
         this.artigoRepository.save(updateArtigo);
     }
