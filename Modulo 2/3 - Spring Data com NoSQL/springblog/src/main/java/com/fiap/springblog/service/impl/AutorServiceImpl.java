@@ -6,10 +6,17 @@ import com.fiap.springblog.service.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AutorServiceImpl implements AutorService {
     @Autowired
     private AutorRepository autorRepository;
+
+    @Override
+    public List<Autor> findAll() {
+        return this.autorRepository.findAll();
+    }
 
     @Override
     public Autor criar(Autor autor) {

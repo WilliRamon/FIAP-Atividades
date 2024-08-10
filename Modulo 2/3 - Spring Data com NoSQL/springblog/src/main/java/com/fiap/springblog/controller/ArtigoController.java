@@ -3,6 +3,9 @@ package com.fiap.springblog.controller;
 import com.fiap.springblog.model.Artigo;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -44,6 +47,11 @@ public class ArtigoController {
                                                   @RequestParam("data") LocalDateTime data,
                                                   @RequestParam("titulo") String titulo){
         return this.artigoService.encontrarArtigosComplexos(status, data, titulo);
+    }
+    @GetMapping("/pagina-artigos")
+    public ResponseEntity<Page<Artigo>> obterArtigosPaginados(Pageable pageable){
+        Page<Artigo> artigos = this.artigoService.listaArtigos(pageable);
+        return ResponseEntity.ok(artigos);
     }
     @PostMapping
     public Artigo criar(@RequestBody Artigo artigo){
