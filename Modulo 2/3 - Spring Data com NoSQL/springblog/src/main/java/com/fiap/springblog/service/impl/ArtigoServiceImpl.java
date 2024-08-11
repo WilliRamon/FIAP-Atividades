@@ -7,7 +7,9 @@ import com.fiap.springblog.repository.AutorRepository;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -96,9 +98,16 @@ public class ArtigoServiceImpl implements ArtigoService {
         return mongoTemplate.find(query, Artigo.class);
     }
 
+    //Essa nova paginacao permite ordenar as consultas com os
+    // parametros que passei. Nesse caso,
+    // ainda recebo um objeto pageable, porém, crio um novo objeto sort para passar os criterios de ordenacao
     @Override
     public Page<Artigo> listaArtigos(Pageable pageable) {
-        return this.artigoRepository.findAll(pageable);
+        Sort sort = Sort.by("titulo").ascending();
+        Pageable paginacao = PageRequest.of(pageable.getPageNumber(),
+                                            pageable.getPageSize(),
+                                            sort);
+        return this.artigoRepository.findAll(paginacao);
     }
 
     @Override
