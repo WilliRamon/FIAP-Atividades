@@ -61,7 +61,10 @@ public class ArtigoController {
     public List<Artigo> obterArtigoPorStatusComOrdenacao(@RequestParam Integer status){
         return this.artigoService.obterArtigoPorStatusComOrdenacao(status);
     }
-
+    @GetMapping("/busca-texto")
+    public List<Artigo> findByTexto(@RequestParam("searchTerm") String termo){
+        return this.artigoService.findByTexto(termo);
+    }
     @PostMapping
     public Artigo criar(@RequestBody Artigo artigo){
         return this.artigoService.criar(artigo);

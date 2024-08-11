@@ -2,6 +2,7 @@ package com.fiap.springblog.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,7 +16,10 @@ public class Artigo {
     private String codigo;
     private String titulo;
     private LocalDateTime data;
-    private String texto;
+
+    @TextIndexed //Estou informando para o mongoDb que esse campo é indexado. Busca equivalente ao método findByTexto().
+    private String texto; //Para finalizar a indexacao, preciso fazer esse comando no mongosh db.artigo.createIndex({texto: "text"})
+
     private String url;
     private Integer status;
 
