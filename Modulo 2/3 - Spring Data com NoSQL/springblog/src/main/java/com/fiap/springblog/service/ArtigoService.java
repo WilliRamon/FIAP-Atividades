@@ -21,4 +21,6 @@ public interface ArtigoService {
     public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate);
     public List<Artigo> encontrarArtigosComplexos(Integer status, LocalDateTime data, String titulo);
     public Page<Artigo> listaArtigos(Pageable pageable);
+    public List<Artigo> findByStatusOrderByTituloAsc(Integer status);
+    public List<Artigo> obterArtigoPorStatusComOrdenacao(Integer status);
 }

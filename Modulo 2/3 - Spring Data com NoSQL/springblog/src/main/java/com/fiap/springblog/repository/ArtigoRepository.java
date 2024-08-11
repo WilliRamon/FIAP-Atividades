@@ -17,5 +17,8 @@ public interface ArtigoRepository extends MongoRepository<Artigo, String> {
     @Query("{ $and: [{'data': {$gte: ?0}}, {'data':  {$lte: ?1}} ]}")
     public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate);
 
-//    Page<Artigo> findAll(Pageable pageble);
+    public List<Artigo> findByStatusOrderByTituloAsc(Integer status);
+
+    @Query(value = "{'status' :  { $eq: ?0 }}", sort = "{'titulo' : 1}")
+    public List<Artigo> obterArtigoPorStatusComOrdenacao(Integer status); // Esse método tem a mesma função que a de cima. Porém, utilizando a anotação QUERY. Com query de
 }

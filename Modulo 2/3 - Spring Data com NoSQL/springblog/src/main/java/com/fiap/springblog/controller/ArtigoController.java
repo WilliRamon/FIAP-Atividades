@@ -53,6 +53,14 @@ public class ArtigoController {
         Page<Artigo> artigos = this.artigoService.listaArtigos(pageable);
         return ResponseEntity.ok(artigos);
     }
+    @GetMapping("/status-ordenado")
+    public List<Artigo> findByStatusOrderByTituloAsc(@RequestParam Integer status){
+        return this.artigoService.findByStatusOrderByTituloAsc(status);
+    }
+    @GetMapping("/status-query-ordenacao")
+    public List<Artigo> obterArtigoPorStatusComOrdenacao(@RequestParam Integer status){
+        return this.artigoService.obterArtigoPorStatusComOrdenacao(status);
+    }
     @PostMapping
     public Artigo criar(@RequestBody Artigo artigo){
         return this.artigoService.criar(artigo);
