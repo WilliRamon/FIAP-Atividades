@@ -3,6 +3,7 @@ package com.fiap.springblog.service.impl;
 import com.fiap.springblog.model.Artigo;
 import com.fiap.springblog.model.ArtigoStatusCount;
 import com.fiap.springblog.model.Autor;
+import com.fiap.springblog.model.AutorTotalArtigo;
 import com.fiap.springblog.repository.ArtigoRepository;
 import com.fiap.springblog.repository.AutorRepository;
 import com.fiap.springblog.service.ArtigoService;
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -134,10 +136,26 @@ public class ArtigoServiceImpl implements ArtigoService {
         TypedAggregation<Artigo> aggregation = Aggregation.newAggregation(
                 Artigo.class,
                 Aggregation.group("status").count().as("quantidade"),
-                Aggregation.project("quantidade").and("status")
+                Aggregation.project("quantidade").and("status") //A exibição será da direita para esquerta
                         .previousOperation()
         );
-        AggregationResults<ArtigoStatusCount> results = mongoTemplate.aggregate(aggregation,ArtigoStatusCount.class);;
+        AggregationResults<ArtigoStatusCount> results = mongoTemplate.aggregate(aggregation,ArtigoStatusCount.class);
+        return results.getMappedResults();
+    }
+
+    @Override
+    public List<AutorTotalArtigo> calcularTotalArtigosPorAutorNoPeriodo(LocalDate dataInico, LocalDate dataFim) {
+        TypedAggregation<Artigo> aggregation = Aggregation.newAggregation(
+                Artigo.class,
+                Aggregation.match( //Esse critério me permite adicionar condições a minha agragação.
+                        Criteria.where("data")
+                        .gte(dataInico.atStartOfDay()) //atStartOfDay -> Inicia a consulta a partir da hora 00:00
+                        .lt(dataFim.plusDays(1).atStartOfDay())
+                ),
+                Aggregation.group("autor").count().as("totalArtigos"),
+                Aggregation.project("totalArtigos").and("autor")
+        );
+        AggregationResults<AutorTotalArtigo> results = mongoTemplate.aggregate(aggregation,AutorTotalArtigo.class);
         return results.getMappedResults();
     }
 

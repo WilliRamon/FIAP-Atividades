@@ -70,6 +70,7 @@ public class ArtigoController {
     public List<ArtigoStatusCount> contarArtigosPorStatus(){
         return this.artigoService.contarArtigosPorStatus();
     }
+    
     @PostMapping
     public Artigo criar(@RequestBody Artigo artigo){
         return this.artigoService.criar(artigo);
