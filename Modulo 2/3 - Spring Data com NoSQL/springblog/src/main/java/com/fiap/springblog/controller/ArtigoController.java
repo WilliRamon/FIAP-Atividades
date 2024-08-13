@@ -5,8 +5,10 @@ import com.fiap.springblog.model.ArtigoStatusCount;
 import com.fiap.springblog.model.AutorTotalArtigo;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,14 @@ public class ArtigoController {
     @GetMapping()
     public List<Artigo> obterTodos(){
         return this.artigoService.obterTodos();
+    }
+
+
+    // Exceção gerada pela diferente de versão de documento.
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<String> handleOptimisticLockingFailureException(OptimisticLockingFailureException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Erro de concorrência: O Artigo foi atualizado por outro usuário. Por favor, tente novamente!");
     }
     @GetMapping("/{codigo}")
     public Artigo obterPorCodigo(@PathVariable String codigo){
