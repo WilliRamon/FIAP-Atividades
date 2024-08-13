@@ -152,8 +152,9 @@ public class ArtigoServiceImpl implements ArtigoService {
                         .gte(dataInico.atStartOfDay()) //atStartOfDay -> Inicia a consulta a partir da hora 00:00
                         .lt(dataFim.plusDays(1).atStartOfDay())
                 ),
-                Aggregation.group("autor").count().as("totalArtigos"),
-                Aggregation.project("totalArtigos").and("autor")
+                Aggregation.group("autor").count().as("totalArtigo"),
+                Aggregation.project("totalArtigo").and("autor")
+                        .previousOperation()
         );
         AggregationResults<AutorTotalArtigo> results = mongoTemplate.aggregate(aggregation,AutorTotalArtigo.class);
         return results.getMappedResults();
