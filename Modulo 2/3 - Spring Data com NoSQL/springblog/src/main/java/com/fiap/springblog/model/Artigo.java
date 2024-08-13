@@ -2,6 +2,7 @@ package com.fiap.springblog.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,4 +26,7 @@ public class Artigo {
 
     @DBRef // Referencia de uma collection dentro da outra
     private Autor autor;
+
+    @Version //Essa dependecia é para garantir que meu documento estará na mesma versão - Utilizado para garantir a atomicidade
+    private Long version;
 }
