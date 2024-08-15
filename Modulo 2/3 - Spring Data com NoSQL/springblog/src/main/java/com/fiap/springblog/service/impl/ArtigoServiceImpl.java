@@ -197,7 +197,7 @@ public class ArtigoServiceImpl implements ArtigoService {
             artigoAnterior.setUrl(updateArtigo.getUrl());
             artigoAnterior.setStatus(updateArtigo.getStatus());
             artigoAnterior.setAutor(updateArtigo.getAutor());
-            
+
             this.artigoRepository.save(artigoAnterior);
         }else{
             this.artigoRepository.save(updateArtigo);
