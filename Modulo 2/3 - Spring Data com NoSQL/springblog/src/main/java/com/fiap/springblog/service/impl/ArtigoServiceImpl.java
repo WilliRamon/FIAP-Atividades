@@ -8,6 +8,7 @@ import com.fiap.springblog.repository.ArtigoRepository;
 import com.fiap.springblog.repository.AutorRepository;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArtigoServiceImpl implements ArtigoService {
@@ -51,7 +53,6 @@ public class ArtigoServiceImpl implements ArtigoService {
     @Transactional //Estou transformando esse método TRANSACIONAL
     @Override
     public Artigo criar(Artigo artigo) {
-
         // Se o autor existe
         if(artigo.getAutor().getCodigo() != null){
 
@@ -62,12 +63,34 @@ public class ArtigoServiceImpl implements ArtigoService {
 
             //Define o autor no artigo
             artigo.setAutor(autor);
-
         }else{
             //Senão, não atribuir um autor ao código
             artigo.setAutor(null);
         }
-        return this.artigoRepository.save(artigo);
+        try{
+            return this.artigoRepository.save(artigo);
+        }catch (OptimisticLockingFailureException ex){ // Tratatica de exceção de OptimisticLockingFailureException
+            // Desenvolver a estratégia
+
+            //1. Recuperar o documento mais recente do banco de dados (na coleção artigo)
+            Artigo atualizado = artigoRepository.findById(artigo.getCodigo()).orElse(null);
+
+            if(atualizado != null){
+                // 2.Atualizar os campos desejados
+                atualizado.setTitulo(artigo.getTitulo());
+                atualizado.setTexto(artigo.getTexto());
+                atualizado.setStatus(artigo.getStatus());
+
+                //3. Incrementar a versão manualmente do documento
+                atualizado.setVersion(atualizado.getVersion() + 1);
+
+                //4. Tentar salvar novamente
+                return this.artigoRepository.save(atualizado);
+            }else{
+                //5. Documento não encontrado, tratar o erro adequadamente
+                throw new RuntimeException("Artigo não encontrado: " + artigo.getCodigo());
+            }
+        }
     }
 
     @Override
@@ -166,7 +189,19 @@ public class ArtigoServiceImpl implements ArtigoService {
     @Transactional
     @Override
     public void atualizar(Artigo updateArtigo) {
-        this.artigoRepository.save(updateArtigo);
+        Artigo artigoAnterior = artigoRepository.findById(updateArtigo.getCodigo()).orElse(null);
+        if (artigoAnterior != null){
+            artigoAnterior.setTitulo(updateArtigo.getTitulo());
+            artigoAnterior.setData(updateArtigo.getData());
+            artigoAnterior.setTexto(updateArtigo.getTexto());
+            artigoAnterior.setUrl(updateArtigo.getUrl());
+            artigoAnterior.setStatus(updateArtigo.getStatus());
+            artigoAnterior.setAutor(updateArtigo.getAutor());
+            
+            this.artigoRepository.save(artigoAnterior);
+        }else{
+            this.artigoRepository.save(updateArtigo);
+        }
     }
 
     @Transactional
