@@ -88,8 +88,12 @@ public class ArtigoController {
                                                                         @RequestParam("dataFim") LocalDate dataFim){
         return this.artigoService.calcularTotalArtigosPorAutorNoPeriodo(dataInicio, dataFim);
     }
+ //   @PostMapping
+//    public Artigo criar(@RequestBody Artigo artigo){
+//        return this.artigoService.criar(artigo);
+//    }
     @PostMapping
-    public Artigo criar(@RequestBody Artigo artigo){
+    public ResponseEntity<?> criar(@RequestBody Artigo artigo){
         return this.artigoService.criar(artigo);
     }
     @PutMapping

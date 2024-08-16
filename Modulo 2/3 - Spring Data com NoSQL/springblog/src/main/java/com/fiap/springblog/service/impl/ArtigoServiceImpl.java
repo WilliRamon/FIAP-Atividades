@@ -8,6 +8,7 @@ import com.fiap.springblog.repository.ArtigoRepository;
 import com.fiap.springblog.repository.AutorRepository;
 import com.fiap.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,8 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +53,34 @@ public class ArtigoServiceImpl implements ArtigoService {
                 .findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Artigo não existe"));
     }
-    @Transactional //Estou transformando esse método TRANSACIONAL
+
+    @Override
+    public ResponseEntity<?> criar(Artigo artigo) {
+
+        if(artigo.getAutor().getCodigo() != null){
+            // Recuperar o autor
+            Autor autor = this.autorRepository
+                    .findById(artigo.getAutor().getCodigo())
+                    .orElseThrow(() -> new IllegalArgumentException("Autor inexistente."));
+
+            //Define o autor no artigo
+            artigo.setAutor(autor);
+        }else{
+            //Senão, não atribuir um autor ao código
+            artigo.setAutor(null);
+        }
+        try{
+            this.artigoRepository.save(artigo);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }catch (DuplicateKeyException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Artigo já existe na coleção");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao criar artigo: " + e.getMessage());
+        }
+    }
+/*    @Transactional //Estou transformando esse método TRANSACIONAL
     @Override
     public Artigo criar(Artigo artigo) {
         // Se o autor existe
@@ -91,7 +121,7 @@ public class ArtigoServiceImpl implements ArtigoService {
                 throw new RuntimeException("Artigo não encontrado: " + artigo.getCodigo());
             }
         }
-    }
+    }*/
 
     @Override
     public List<Artigo> findByDataGreaterThan(LocalDateTime data) {
