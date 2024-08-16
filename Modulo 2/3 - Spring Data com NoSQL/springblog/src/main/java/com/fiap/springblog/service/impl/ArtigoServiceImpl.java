@@ -80,6 +80,25 @@ public class ArtigoServiceImpl implements ArtigoService {
                     .body("Erro ao criar artigo: " + e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> atualizarArtigo(String id, Artigo artigo) {
+        try{
+            Artigo existeArtigo = this.artigoRepository.findById(id).orElse(null);
+            if(existeArtigo == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Artigo nâo encontrado na coleção");
+            }
+            existeArtigo.setTitulo(artigo.getTitulo());
+            existeArtigo.setData(artigo.getData());
+            existeArtigo.setTexto(artigo.getTexto());
+            this.artigoRepository.save(existeArtigo);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao atualizar artigo: " + e.getMessage());
+        }
+    }
 /*    @Transactional //Estou transformando esse método TRANSACIONAL
     @Override
     public Artigo criar(Artigo artigo) {

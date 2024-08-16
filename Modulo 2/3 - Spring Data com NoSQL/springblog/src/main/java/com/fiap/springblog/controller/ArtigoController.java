@@ -104,6 +104,10 @@ public class ArtigoController {
     public void atualizarArtigo(@PathVariable String id, @RequestBody String novaURL){
         this.artigoService.atualizarArtigo(id, novaURL);
     }
+    @PutMapping("/atualiza-id/{id}")
+    public ResponseEntity<?> atualizarArtigo(@PathVariable String id, @RequestBody Artigo artigo){
+        return this.artigoService.atualizarArtigo(id, artigo);
+    }
     @DeleteMapping("/{id}")
     public void deleteArtigo(@PathVariable String id){
         this.artigoService.deleteById(id);
