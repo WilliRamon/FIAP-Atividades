@@ -1,8 +1,6 @@
 package com.fiap.springblog.controller;
 
-import com.fiap.springblog.model.Artigo;
-import com.fiap.springblog.model.ArtigoStatusCount;
-import com.fiap.springblog.model.AutorTotalArtigo;
+import com.fiap.springblog.model.*;
 import com.fiap.springblog.service.ArtigoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +84,7 @@ public class ArtigoController {
 
     @GetMapping("/total-artigo-autor-periodo")
     public List<AutorTotalArtigo> calcularTotalArtigosPorAutorNoPeriodo(@RequestParam("dataInicio")LocalDate dataInicio,
-                                                                        @RequestParam("dataFim") LocalDate dataFim){
+                                                                        @RequestParam("dataFim") LocalDate dataFim) {
         return this.artigoService.calcularTotalArtigosPorAutorNoPeriodo(dataInicio, dataFim);
     }
  //   @PostMapping
@@ -96,6 +94,13 @@ public class ArtigoController {
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody Artigo artigo){
         return this.artigoService.criar(artigo);
+    }
+    @PostMapping("/artigo-autor")
+    public ResponseEntity<?> criarArtigoComAutor(@RequestBody ArtigoComAutorRequest resquest){
+        Artigo artigo = resquest.getArtigo();
+        Autor autor = resquest.getAutor();
+
+        return this.artigoService.criarArtigoComAutor(artigo, autor);
     }
     @PutMapping
     public void atualizar(@RequestBody Artigo artigo){
