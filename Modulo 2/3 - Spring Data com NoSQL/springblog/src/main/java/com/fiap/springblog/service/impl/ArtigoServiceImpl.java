@@ -261,6 +261,23 @@ public class ArtigoServiceImpl implements ArtigoService {
         return results.getMappedResults();
     }
 
+    @Override
+    public void excluirArtigoEAutor(Artigo artigo) {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.execute(status -> {
+            try {
+                //Iniciar a transação
+                artigoRepository.delete(artigo);
+                Autor autor = artigo.getAutor();
+                autorRepository.delete(autor);
+            }catch (Exception e){
+                //Tratar o erro e lançar a transação em caso de exceção
+                status.setRollbackOnly();
+                throw new RuntimeException("Erro ao excluir artigo e autor: " + e.getMessage());
+            }
+            return null;
+        });
+    }
     @Transactional
     @Override
     public void atualizar(Artigo updateArtigo) {

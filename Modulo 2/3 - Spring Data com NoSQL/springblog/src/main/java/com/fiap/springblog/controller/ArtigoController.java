@@ -123,4 +123,8 @@ public class ArtigoController {
     public void deleteArtigoById(@RequestParam("Id") String id){
         this.artigoService.deleteArtigobyId(id);
     }
+    @DeleteMapping("/delete-artigo-autor")
+    public void excluirArtigoEAutor(@RequestBody Artigo artigo){
+        this.artigoService.excluirArtigoEAutor(artigo);
+    }
 }

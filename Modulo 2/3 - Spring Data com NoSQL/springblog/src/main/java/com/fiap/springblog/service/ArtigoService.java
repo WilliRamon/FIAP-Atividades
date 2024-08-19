@@ -35,4 +35,5 @@ public interface ArtigoService {
     public List<ArtigoStatusCount> contarArtigosPorStatus();
     public List<AutorTotalArtigo> calcularTotalArtigosPorAutorNoPeriodo(LocalDate dataInico,
                                                                         LocalDate dataFim);
+    public void excluirArtigoEAutor(Artigo artigo);
 }
