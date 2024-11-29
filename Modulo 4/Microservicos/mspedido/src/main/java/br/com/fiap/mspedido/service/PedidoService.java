@@ -30,10 +30,14 @@ public class PedidoService {
     public Pedido criarPedido(Pedido pedido){
 
         boolean produtoDisponivel = verificarDisponibilidadeProdutos(pedido.getItensPedido());
-
         if(!produtoDisponivel){
             throw new NoSuchElementException("Um ou mais produtos não estão disponíveis.");
         }
+        double valorTotal = calcularValorTotal(pedido.getItensPedido());
+        pedido.setValorTotal(valorTotal);
+
+        atualizarEstoqueProdutos(pedido.getItensPedido());
+
         return pedidoRepository.save(pedido);
     }
     private boolean verificarDisponibilidadeProdutos(List<ItemPedido> itensPedido) {
@@ -63,5 +67,43 @@ public class PedidoService {
             }
         }
         return true;
+    }
+    private double calcularValorTotal(List<ItemPedido> itensPedido) {
+        double valorTotal = 0.0;
+
+        for (ItemPedido itemPedido: itensPedido) {
+            Integer idProduto = itemPedido.getIdProduto();
+            int quantidade = itemPedido.getQuantidade();
+
+            ResponseEntity<String> response = restTemplate.getForEntity(
+                    "http://localhost:8080/api/produtos/{produtoId}",
+                    String.class,
+                    idProduto
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK){
+                try{
+                    JsonNode produtoJson = objectMapper.readTree(response.getBody());
+                    double preco = produtoJson.get("preco").asDouble();
+                    valorTotal += preco * quantidade;
+                }catch (IOException e){
+                    //Tratar depois
+                }
+            }
+        }
+        return valorTotal;
+    }
+    private void atualizarEstoqueProdutos(List<ItemPedido> itensPedido) {
+        for(ItemPedido itemPedido : itensPedido){
+            Integer idProduto = itemPedido.getIdProduto();
+            int quantidade = itemPedido.getQuantidade();
+
+            restTemplate.put(
+                    "http://localhost:8080/api/produtos/atualizar/estoque/{produtoId}/{quantidade}",
+                    null,
+                    idProduto,
+                    quantidade
+            );
+        }
     }
 }
